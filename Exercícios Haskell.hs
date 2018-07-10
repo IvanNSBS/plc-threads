@@ -187,3 +187,59 @@ f (x:y:xs)
 
 g :: [Int] -> Bool
 g list = foldr (+) 0 (map (`mod` 2)(filter (<=100)(filter (>= 10) list))) == 0
+
+
+-------------------------------
+-- Slide 3 - polimorfismo
+
+--Ordena lista
+ordena :: (Ord a) => (a -> a -> Bool) -> [a] -> [a]
+ordena f [x] = [x]
+ordena f (x:y:xs)
+ | (f x y == True ) = x:ordena f (y:xs)
+ | otherwise = y:ordena f (x:xs)
+
+bubble :: (Ord t) => (t -> t -> Bool) -> [t] -> Int -> [t]
+bubble f l i
+ | i == length l = l
+ | otherwise = bubble f (ordena f l) (i+1)
+
+bubbleSort :: (Ord t) => (t -> t -> Bool) -> [t] -> [t]
+bubbleSort f l = bubble f l 0
+
+----- Exercicio Agrupar
+--dxa pra casa
+
+
+
+--Slide 3 - Tipos algébricos
+
+data Shape = Circle Float | Rectangle Float Float
+
+--Circle 4.9 :: Shape
+--Rectangle 4.2 2.0 :: Shape
+
+isRound :: Shape -> Bool
+isRound (Circle _) = True
+isRound (Rectangle _ _) = False
+
+area :: Shape -> Float
+area (Circle c) = 2*3.14*c
+area (Rectangle a b) = a*b
+
+data DiaSemana = Segunda | Terça | Quarta | Quinta | Sexta | Sabado | Domingo deriving(Eq)
+
+isWeekend :: DiaSemana -> Bool
+isWeekend d
+ | (d == Sabado || d == Domingo) = True
+ | otherwise = False
+
+temPLC :: DiaSemana -> Bool
+temPLC d 
+ | (d == Terça || d == Quinta) = True
+ | otherwise = False
+
+instance Show DiaSemana where
+    show day
+     | (day == Segunda || day == Domingo || day == Sabado ) = "Nao ha aula"
+     | otherwise = "4 horas de aula"
